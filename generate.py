@@ -95,12 +95,10 @@ class {name}:
 
 def main():
     parser = ArgumentParser()
-    parser.add_argument(
-        "file")
-    parser.add_argument(
-        "--stdout", "-s", default=False, action="store_true", help="print to stdout")
-    parser.add_argument(
-        "--out", "-o", type=str, default="", help="print to file")
+    parser.add_argument("file")
+    parser.add_argument("--stdout", "-s", default=False, action="store_true", help="print to stdout")
+    parser.add_argument("--out_py", type=str, default="", help="python output file")
+    parser.add_argument("--out_c", type=str, default="", help="c output file")
     args, _ = parser.parse_known_args()
     fields = {}
     src = Path(args.file)
@@ -117,14 +115,15 @@ def main():
     if args.stdout:
         print(f"Python: ---\n\n{py_result}\n\n")
         print(f"C Header: ---\n\n{c_result}\n\n")
-    def do_open(ext):
-        p = Path(args.out + ext)
+    def do_open(path):
+        p = Path(path)
         p.parent.mkdir(parents=True, exist_ok=True)
         return open(p, "+w")
-    if args.out:
-        with do_open(".h") as f:
+    if args.out_c:
+        with do_open(args.out_c) as f:
             f.write(c_result)
-        with do_open(".py") as f:
+    if args.out_py:
+        with do_open(args.out_py) as f:
             f.write(py_result)
 
 
