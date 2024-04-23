@@ -52,14 +52,14 @@ static inline size_t dump_{name}({name}* obj, char* __restrict__ buff, size_t si
     def format(name, fields, total_size):
         return CTempl.Main.format_map({
             "name": name,
-            "fields": f"{''.join(f'    {t}_t {n};{nl}' for n, t in fields.items())}",
+            "fields": f"{''.join(f'    {t}_t {n};{nl}' for n, t in fields)}",
             "total_size": total_size,
             "parse_fields": ''.join(CTempl.Parse.format_map({
                 "name": n
-            }) for n, t in fields.items()),
+            }) for n, t in fields),
             "dump_fields": ''.join(CTempl.Dump.format_map({
                 "name": n
-            }) for n, t in fields.items())
+            }) for n, t in fields)
         })
 
 class PyTempl:
@@ -82,11 +82,11 @@ class {name}:
 """
     @staticmethod
     def struct_fmt(fields):
-        return "<" + "".join([valid_types[t][0] for n, t in fields.items()])
+        return "<" + "".join([valid_types[t][0] for n, t in fields])
     @staticmethod
     def format(name, fields):
         fmt = PyTempl.struct_fmt(fields)
-        names = "".join([f'    {n}: {valid_types[t][1]}{nl}' for n, t in fields.items()])
+        names = "".join([f'    {n}: {valid_types[t][1]}{nl}' for n, t in fields])
         return PyTempl.Main.format_map({
             "name": name, 
             "names": names, 
@@ -100,7 +100,7 @@ def main():
     parser.add_argument("--out_py", type=str, default="", help="python output file")
     parser.add_argument("--out_c", type=str, default="", help="c output file")
     args, _ = parser.parse_known_args()
-    fields = {}
+    fields = []
     src = Path(args.file)
     if not ident.match(src.stem):
         raise RuntimeError(f".msg file name is not allowed: {src.name}")
@@ -109,7 +109,7 @@ def main():
             t, name = line.split()
             if not ident.match(name):
                 raise RuntimeError(f"Invalid identifier: {name}")
-            fields[name] = t
+            fields.append((name, t))
     c_result = CTempl.format(src.stem, fields, struct.calcsize(PyTempl.struct_fmt(fields)))
     py_result = PyTempl.format(src.stem, fields)
     if args.stdout:
