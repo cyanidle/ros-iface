@@ -59,7 +59,7 @@ static inline size_t dump_{name}({name}* obj, char* __restrict__ buff, size_t si
 """
     @staticmethod
     def format_consts(name, fields: Iterable[Field]):
-        items = ''.join(f"    {f.name} = {f.const},{nl}" for f in fields if f.const)
+        items = ''.join(f"    {name}_{f.name} = {f.const},{nl}" for f in fields if f.const)
         if items: return """typedef enum {{\n{}}} {}_;\n""".format(items, name)
         else: return ""
     @staticmethod
