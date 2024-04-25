@@ -47,12 +47,12 @@ typedef double float64_t;
 struct {name} {{
 {fields}}};
 
-static inline size_t parse_{name}({name}* out, const char* __restrict__ src, size_t size) {{
+static inline size_t parse_{name}({name}* __restrict__ out, const char* __restrict__ src, size_t size) {{
     if (size < {total_size}) return 0;{parse_fields}
     return {total_size};
 }}
 
-static inline size_t dump_{name}({name}* obj, char* __restrict__ buff, size_t size) {{
+static inline size_t dump_{name}({name}* __restrict__ obj, char* __restrict__ buff, size_t size) {{
     if (size < {total_size}) return 0;{dump_fields}
     return {total_size};
 }}
