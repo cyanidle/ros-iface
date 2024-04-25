@@ -52,7 +52,7 @@ static inline size_t parse_{name}({name}* __restrict__ out, const char* __restri
     return {total_size};
 }}
 
-static inline size_t dump_{name}({name}* __restrict__ obj, char* __restrict__ buff, size_t size) {{
+static inline size_t dump_{name}(const {name}* __restrict__ obj, char* __restrict__ buff, size_t size) {{
     if (size < {total_size}) return 0;{dump_fields}
     return {total_size};
 }}
