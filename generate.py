@@ -86,7 +86,7 @@ class {name}:
     def from_buffer(buff):
         return {name}(*{name}._s.unpack(buff))
     def into_buffer(self):
-        return {name}._s.pack(getattr(self, n) for n in {name}._names)
+        return {name}._s.pack(*tuple(getattr(self, n) for n in {name}._names))
 
 {name}._names = tuple(f.name for f in fields({name}))
 {name}._s = struct.Struct("{fmt}")
